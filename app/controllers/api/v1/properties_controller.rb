@@ -3,41 +3,43 @@ module Api
         class PropertiesController < ApplicationController
 
             def index
+                with_validated_params(FetchPropertiesContract.new) do |params|
 
-                if params[:id]
-                    properties = Property.find(params[:id])
-                else
-
-                    search_hash = [""]
-                    search_keys = [
-                        "property_address", "property_type", "num_bedrooms", "num_sitting_rooms", "num_kitchen", "num_toilets", "num_bathrooms", "owner", 
-                    ];
-
-                    for key in search_keys
-
-                        if params[key] and key != search_keys[search_keys.length() - 1]
-                            search_hash[0] += "#{key} = ? and "
-                            search_hash.push(params[key])
-                        elsif params[key]
-                            search_hash[0] += "#{key} = ?"
-                            search_hash.push(params[key])
-                        end
-                    end
-
-
-                    
-                    if (search_hash.length() < 2)
-                        properties = Property.order("id DESC")
+                    if params[:id]
+                        properties = Property.where("id = ?", params[:id])
                     else
-                        properties = Property.where(search_hash).order("id DESC")
-                    end
-                    
-                end
 
-                if properties
-                    render json: {status: "success", message: "successfully fetched all properties.", data: properties}, status: :ok
-                else
-                    render json: {status: "error", message: "successfully fetched all properties.", data: []}, status: :ok
+                        search_hash = [""]
+                        search_keys = [
+                            "property_address", "property_type", "num_bedrooms", "num_sitting_rooms", "num_kitchen", "num_toilets", "num_bathrooms", "owner", 
+                        ];
+
+                        for key in search_keys
+
+                            if params[key] and key != search_keys[search_keys.length() - 1]
+                                search_hash[0] += "#{key} = ? and "
+                                search_hash.push(params[key])
+                            elsif params[key]
+                                search_hash[0] += "#{key} = ?"
+                                search_hash.push(params[key])
+                            end
+                        end
+
+
+                        
+                        if (search_hash.length() < 2)
+                            properties = Property.order("id DESC")
+                        else
+                            properties = Property.where(search_hash).order("id DESC")
+                        end
+                        
+                    end
+
+                    if properties
+                        render json: {status: "success", message: "successfully fetched all properties.", data: properties}, status: :ok
+                    else
+                        render json: {status: "error", message: "successfully fetched all properties.", data: []}, status: :ok
+                    end
                 end
             end
 
@@ -80,6 +82,16 @@ module Api
 
             def properties_update
                 params.permit(:num_bedrooms, :num_sitting_rooms, :num_kitchen, :num_toilets, :num_bathrooms, :description, :valid_from)
+            end
+
+            def with_validated_params(schema)
+                result = schema.call(params.to_unsafe_hash)
+            
+                if result.success?
+                  yield result.to_h
+                else
+                    render json: {status: "failed", message: "Request unsuccessful.", error: result.errors.to_h}, status: :bad_request
+                end
             end
         end
     end

@@ -12,6 +12,10 @@ gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 
+# gem 'dry-validation', '~> 1.4.0'
+gem 'dry-validation'
+gem 'dry-schema', '~> 1.13'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
