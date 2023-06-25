@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  address: MyText
+  type: 
+  num_bedrooms: 1
+  num_sitting_rooms: 1
+  num_kitchen: 1
+  num_toilets: 1
+  num_bathrooms: 1
+  owner: MyString
+  description: MyText
+  valid_from: 2023-06-25
+  valid_to: 2023-06-25
+
+two:
+  address: MyText
+  type: 
+  num_bedrooms: 1
+  num_sitting_rooms: 1
+  num_kitchen: 1
+  num_toilets: 1
+  num_bathrooms: 1
+  owner: MyString
+  description: MyText
+  valid_from: 2023-06-25
+  valid_to: 2023-06-25
