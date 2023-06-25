@@ -5,57 +5,29 @@ module Api
             def index
                 with_validated_params(FetchPropertiesContract.new) do |params|
 
-                    if params[:id]
-                        properties = Property.where("id = ?", params[:id])
-                    else
+                    begin
 
-                        search_hash = [""]
-                        search_keys = [
-                            "property_address", "property_type", "num_bedrooms", "num_sitting_rooms", "num_kitchen", "num_toilets", "num_bathrooms", "owner", 
-                        ];
+                        properties = PropertyManager::PropertyFetcher.call(params)
 
-                        for key in search_keys
+                        render json: {status: "success", message: "successfully fetched all matching properties.", data: properties}, status: :ok
 
-                            if params[key] and key != search_keys[search_keys.length() - 1]
-                                search_hash[0] += "#{key} = ? and "
-                                search_hash.push(params[key])
-                            elsif params[key]
-                                search_hash[0] += "#{key} = ?"
-                                search_hash.push(params[key])
-                            end
-                        end
+                    rescue
+                        render json: {status: "error", message: "Request unsuccessful.", error: properties.errors}, status: :ok
 
-
-                        
-                        if (search_hash.length() < 2)
-                            properties = Property.order("id DESC")
-                        else
-                            properties = Property.where(search_hash).order("id DESC")
-                        end
-                        
-                    end
-
-                    if properties
-                        render json: {status: "success", message: "successfully fetched all properties.", data: properties}, status: :ok
-                    else
-                        render json: {status: "error", message: "successfully fetched all properties.", data: []}, status: :ok
                     end
                 end
             end
 
 
             def create 
-
-                puts params
                 
                 property = Property.new(properties_body)
 
                 if property.save
                     render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
                 else
-                    render json: {status: "error", message: "successfully fetched all properties.", data: property.errors}, status: :ok
+                    render json: {status: "error", message: "Request unsuccessful.", errors: property.errors},status: :bad_request
                 end
-
 
             end
 
@@ -67,7 +39,7 @@ module Api
                 if property.update(properties_update)
                     render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
                 else 
-                    render json: {status: "error", message: "successfully fetched all properties.", data: property.errors}, status: :ok
+                    render json: {status: "error", message: "Request unsuccessful.", errors: property.errors}, status: :bad_request
                 
                 end
             
