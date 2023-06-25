@@ -20,13 +20,16 @@ module Api
 
 
             def create 
-                
-                property = Property.new(properties_body)
 
-                if property.save
-                    render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
-                else
-                    render json: {status: "error", message: "Request unsuccessful.", errors: property.errors},status: :bad_request
+                with_validated_params(CreatePropertyContract.new) do |params|
+                
+                    property = Property.new(params)
+
+                    if property.save
+                        render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
+                    else
+                        render json: {status: "error", message: "Request unsuccessful.", errors: property.errors},status: :bad_request
+                    end
                 end
 
             end
@@ -34,13 +37,16 @@ module Api
 
             def update
 
-                property = Property.find(params[:id])
+                with_validated_params(UpdatePropertyContract.new) do |params|
 
-                if property.update(properties_update)
-                    render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
-                else 
-                    render json: {status: "error", message: "Request unsuccessful.", errors: property.errors}, status: :bad_request
-                
+                    property = Property.find(params[:id])
+
+                    if property.update(params)
+                        render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
+                    else 
+                        render json: {status: "error", message: "Request unsuccessful.", errors: property.errors}, status: :bad_request
+                    
+                    end
                 end
             
             end
