@@ -46,4 +46,5 @@ Once these variables has been set. The database can either be created manually o
 
 # STARTING THE APPLICATION
 
-To start the application simply run ```docker-compose rup``` on a terminal at the root directory fo this project. This will start the application on "http://localhost:3000".
+To start the application simply run ```docker-compose up``` on a terminal at the root directory fo this project. This will start the application on "http://localhost:3000".
+Proceed to make requests with "/api/v1" attached to the base url e.g "http://localhost:3000/api/v1/properties"
