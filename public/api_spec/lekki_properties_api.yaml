@@ -13,7 +13,7 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-  - url: "{ENV.SERVER_URL}"
+  - url: "{ENV.BASE_SERVER_URL}/api/v1"
 tags:
   - name: property
     description: Add, Update, View property data
