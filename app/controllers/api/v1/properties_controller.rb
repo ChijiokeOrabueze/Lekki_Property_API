@@ -6,14 +6,15 @@ module Api
                 with_validated_params(FetchPropertiesContract.new) do |params|
 
                     begin
-
                         properties = PropertyManager::PropertyFetcher.call(params)
 
-                        render json: {status: "success", message: "successfully fetched all matching properties.", data: properties}, status: :ok
+                        handle_response({
+                            "success" => true,
+                            "data" => properties
+                        }, "successfully fetched all matching properties.")
 
                     rescue
-                        render json: {status: "error", message: "Request unsuccessful.", error: properties.errors}, status: :ok
-
+                        handle_response({"internal_error" => true})
                     end
                 end
             end
@@ -24,22 +25,13 @@ module Api
                 with_validated_params(CreatePropertyContract.new) do |params|
 
                     begin
+
+                        property_response = PropertyManager::PropertyCreator.call(params)
+
+                        handle_response(property_response, "Property created successfully.")
                 
-                        is_valid_address = PropertyManager::AddressLocator.call(params[:property_address])
-
-                        if !is_valid_address
-                            render json: {status: "error", message: "Invalid address", errors: "Invalid address"},status: :bad_request
-                        else
-                            property = Property.new(params)
-
-                            if property.save
-                                render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
-                            else
-                                render json: {status: "error", message: "Request unsuccessful.", errors: property.errors},status: :bad_request
-                            end
-                        end
                     rescue
-                        render json: {status: "error", message: "Something went wrong. Please try again later.", errors: "Something went wrong. Please try again later."},status: :bad_request
+                        handle_response({"internal_error" => true})
                     end
                 end
 
@@ -50,21 +42,12 @@ module Api
 
                 with_validated_params(UpdatePropertyContract.new) do |params|
                     begin
+                        property_response = PropertyManager::PropertyUpdater.call(params)
 
-                        property = Property.find(params[:id])
+                        handle_response(property_response, "successfully updated property with id = #{params[:id]}.")
 
-                        if property.update(params)
-                            render json: {status: "success", message: "successfully fetched all properties.", data: Property.find(params[:id])}, status: :ok
-                        else 
-                            render json: {status: "error", message: "Request unsuccessful.", errors: property.errors}, status: :bad_request
-                        
-                        end
-
-                    rescue ActiveRecord::RecordNotFound
-                        render json: {status: "error", message: "Requested property not found.", errors: "Requested property not found."},status: :bad_request
                     rescue
-                        render json: {status: "error", message: "Something went wrong. Please try again later.", errors: "Something went wrong. Please try again later."},status: :bad_request
-                    
+                        handle_response({"internal_error" => true})
                     end
                 end
             
@@ -80,6 +63,17 @@ module Api
                   yield result.to_h
                 else
                     render json: {status: "failed", message: "Request unsuccessful.", error: result.errors.to_h}, status: :bad_request
+                end
+            end
+
+            def handle_response(response, message="")
+            
+                if response["success"]
+                    render json: {status: "success", message: message, data: response["data"]}, status: :ok
+                elsif response["internal_error"]
+                    render json: {status: "error", message: "Something went wrong. Please try again later.", errors: "Something went wrong. Please try again later."},status: :internal_server_error
+                else
+                    render json: {status: "failed", message: response["message"], errors: response["errors"]}, status: :bad_request
                 end
             end
         end

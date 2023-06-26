@@ -14,21 +14,20 @@ module PropertyManager
 
                 search_hash = [""]
                 search_keys = [
-                    "property_address", "property_type", "num_bedrooms", "num_sitting_rooms", "num_kitchen", "num_toilets", "num_bathrooms", "owner", 
+                    :property_address, :property_type, :num_bedrooms, :num_sitting_rooms, :num_kitchen, :num_toilets, :num_bathrooms, :owner
                 ];
 
                 for key in search_keys
 
-                    if filter_params[key] and key != search_keys[search_keys.length() - 1]
-                        search_hash[0] += "#{key} = ? and "
+                    if filter_params[key] and search_hash.length() == 1
+                        search_hash[0] += "#{key} = ?"
                         search_hash.push(filter_params[key])
                     elsif filter_params[key]
-                        search_hash[0] += "#{key} = ?"
+                        search_hash[0] += " and #{key} = ?"
                         search_hash.push(filter_params[key])
                     end
                 end
 
-                
                 if (search_hash.length() < 2)
                     
                     @properties = Property.order("id DESC")
