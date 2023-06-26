@@ -25,12 +25,18 @@ module Api
 
                     begin
                 
-                        property = Property.new(params)
+                        is_valid_address = PropertyManager::AddressLocator.call(params[:property_address])
 
-                        if property.save
-                            render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
+                        if !is_valid_address
+                            render json: {status: "error", message: "Invalid address", errors: "Invalid address"},status: :bad_request
                         else
-                            render json: {status: "error", message: "Request unsuccessful.", errors: property.errors},status: :bad_request
+                            property = Property.new(params)
+
+                            if property.save
+                                render json: {status: "success", message: "successfully fetched all properties.", data: property}, status: :ok
+                            else
+                                render json: {status: "error", message: "Request unsuccessful.", errors: property.errors},status: :bad_request
+                            end
                         end
                     rescue
                         render json: {status: "error", message: "Something went wrong. Please try again later.", errors: "Something went wrong. Please try again later."},status: :bad_request

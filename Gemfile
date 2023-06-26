@@ -16,6 +16,8 @@ gem "puma", "~> 5.0"
 gem 'dry-validation'
 gem 'dry-schema', '~> 1.13'
 
+gem 'httparty', '0.17.3'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
