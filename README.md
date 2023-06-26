@@ -10,13 +10,13 @@ This is the Lekki property API. An API application built with ruby on the rails 
 
 The only real dependency of this application is docker and docker-compose. This is because the application was built and contanerized with docker and docker-compose.  This implies that running the application will require a computer capable of virtualization with an installation of both docker and docker-compose. visit the docker page "https://www.docker.com/" to download and install these tools if they are not yet installed.   
 
-## THIRD PARTY LIBRARIES
+## THIRD PARTY API'S
 
-This application uses the Geopify Geocoding API for address validation. Running the application will require setting up a Geopify account and getting an api key. To do this visit the geopify website "https://www.geoapify.com/pricing" sign up for the free account and create a project. This will give an api key for making api calls. This value will be configured as part of the environment variables.
+This application uses the Geoapify Geocoding API for address validation. Running the application will require setting up a Geoapify account and getting an api key. To do this visit the geopify website "https://www.geoapify.com/pricing" sign up for the free account and create a project. This will give an api key for making api calls. This value will be configured as part of the environment variables.
 
 ## CONFIGURATION
 
-Configurations to be carried before running this application includes setting up the database environment variables. This can be done in the .env file. For development, The application comes with an embedded postgres database which runs as a seperate container. In addition to this, the API key for the Geopify Geocoding service also needs to be set.
+Configurations to be carried before running this application includes setting up the database environment variables. This can be done in the .env file. For development, The application comes with an embedded postgres database which runs as a seperate container. In addition to this, the API key for the Geoapify Geocoding service also needs to be set.
 
 The list of environment variables to set includes the following:
 
