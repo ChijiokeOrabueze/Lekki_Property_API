@@ -1,6 +1,6 @@
 # LEKKI PROPERTY API
 
-This is the Lekki property API. An API application built with ruby on the rails framework. It exposes 3 endpoints for creating, updating and fetching real estate properties. The specifications of these endpoints are documented with the swagger editor. The "lekki_properties_api.yaml" file in the public folder of this application contains information of the api specifications. It can be viewed by either importing the file on the free online swagger editor ("https://editor.swagger.io/") or hosting it as a public or private resource.
+This is the Lekki property API. An API application built with ruby on the rails framework. It exposes 3 endpoints for creating, updating and fetching real estate properties. The specifications of these endpoints are documented with the swagger editor and hosted at "https://chijiokeorabueze.github.io/Lekki_Property_Api_Spec/". In addition, the raw file of this documentation can be found in at public/lekki_properties_api.yaml. This can be viewed and edited by importing the file to a swagger editor ("https://editor.swagger.io/").
 
 
 * Ruby version - 3.1.4
